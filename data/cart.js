@@ -1,4 +1,4 @@
-export const cart = [
+let defaultCart = [
     {
         productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
         quantity: 2,
@@ -8,6 +8,12 @@ export const cart = [
         quantity: 1,
     }
 ];
+
+export let cart = JSON.parse(localStorage.getItem("cart")) || defaultCart;
+console.log(defaultCart)
+export function saveToStorage() {
+    localStorage.setItem("cart", JSON.stringify(cart))
+}
 
 export function addToCart(productId) {
     let matchedProduct;
@@ -32,5 +38,15 @@ export function addToCart(productId) {
     console.log(addedElem.classList)
     setTimeout(() => {
         addedElem.classList.remove("added-to-cart-display")
-    }, 2000)
+    }, 2000);
+    saveToStorage()
+}
+
+export function removeFromCart(productId) {
+
+    const prodIndex = cart.findIndex(item => item.productId === productId)
+
+    cart.splice(prodIndex, 1)
+
+    saveToStorage()
 }
