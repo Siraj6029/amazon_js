@@ -3,6 +3,11 @@ import { products } from "../data/products.js";
 import { formateCurrency } from "./utils/money.js";
 
 let productsHTML = "";
+let cartQuantity = 0
+cart.forEach((item) => {
+    cartQuantity += Number(item.quantity)
+})
+document.querySelector(".js-cart-quantity").innerText = cartQuantity
 
 products.forEach((product) => {
     productsHTML += `

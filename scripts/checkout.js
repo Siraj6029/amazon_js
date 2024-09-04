@@ -1,4 +1,4 @@
-import { cart, removeFromCart } from "../data/cart.js";
+import { cart, removeFromCart, saveToStorage } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formateCurrency } from "./utils/money.js";
 
@@ -25,12 +25,12 @@ cart.forEach((item) => {
                 <div class="product-price">
                   $${formateCurrency(product.priceCents)}
                 </div>
-                <div class="product-quantity">
+                <div class="product-quantity js-product-quantity">
                   <span>
-                    Quantity: <span class="quantity-label">${item.quantity}</span>
+                    Quantity: <span class="quantity-label js-quantity-label">${item.quantity}</span>
                   </span>
-                  <span class="update-quantity-link link-primary">
-                    Update
+                  <input class="quantity-input-box" type="Number" min="1"></input>
+                  <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id="${productId}">    Update
                   </span>
                   <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${productId}">
                     Delete
@@ -98,4 +98,36 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
 
         document.querySelector(`.js-cart-item-container-${productId}`).remove()
     })
-})
+});
+
+document.querySelectorAll(`.js-update-quantity-link`)
+    .forEach((updateElem) => {
+        updateElem.addEventListener("click", () => {
+            const productId = updateElem.dataset.productId
+
+            const quantityInputElem = document.querySelector(`.js-cart-item-container-${productId} .quantity-input-box`);
+
+            const quantityElem = document.querySelector(`.js-cart-item-container-${productId} .js-quantity-label`)
+
+            if (updateElem.innerText.trim() === "Update") {
+
+                quantityInputElem.style.display = "inline"
+                quantityElem.style.display = "none"
+
+                updateElem.innerText = "Save"
+
+            } else {
+                quantityElem.style.display = "inline"
+                quantityElem.innerHTML = quantityInputElem.value
+
+                quantityInputElem.style.display = "none";
+                updateElem.innerText = "Update";
+
+                const matchedItem = cart.find(obj => obj.productId === productId)
+                matchedItem.quantity = quantityInputElem.value
+                saveToStorage()
+            };
+            console.log(cart)
+        })
+
+    })
