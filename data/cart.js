@@ -2,15 +2,16 @@ let defaultCart = [
     {
         productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
         quantity: 2,
+        deliveryOptionId: 1,
     },
     {
         productId: "15b6fc6f-327a-4ec4-896f-486349e85a3d",
         quantity: 1,
+        deliveryOptionId: 2,
     }
 ];
 
 export let cart = JSON.parse(localStorage.getItem("cart")) || defaultCart;
-console.log(defaultCart)
 export function saveToStorage() {
     localStorage.setItem("cart", JSON.stringify(cart))
 }
@@ -30,12 +31,12 @@ export function addToCart(productId) {
     } else {
         cart.push({
             productId: productId,
-            quantity: Number(quantityElem.value)
+            quantity: Number(quantityElem.value),
+            deliveryOptionId: 1,
         });
     }
     const addedElem = document.querySelector(`.js-added-to-cart-${productId}`)
     addedElem.classList.add("added-to-cart-display")
-    console.log(addedElem.classList)
     setTimeout(() => {
         addedElem.classList.remove("added-to-cart-display")
     }, 2000);
@@ -48,5 +49,12 @@ export function removeFromCart(productId) {
 
     cart.splice(prodIndex, 1)
 
+    saveToStorage()
+}
+
+export function updateDeliveryOption(productId, deliveryOptionId) {
+
+    const product = cart.find(item => item.productId == productId);
+    product.deliveryOptionId = deliveryOptionId;
     saveToStorage()
 }
