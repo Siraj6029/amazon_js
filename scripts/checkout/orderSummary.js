@@ -3,6 +3,7 @@ import { cart, removeFromCart, saveToStorage, updateDeliveryOption } from "../..
 import { deliveryOptions } from "../../data/deliveryOptions.js";
 import { products } from "../../data/products.js";
 import { formateCurrency } from ".././utils/money.js";
+import { renderCheckoutHeader } from "./checkoutHeader.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
 
 
@@ -103,6 +104,7 @@ export function renderOrderSummary() {
 
             document.querySelector(`.js-cart-item-container-${productId}`).remove()
             renderPaymentSummary()
+            renderCheckoutHeader()
         })
     });
 
@@ -137,6 +139,7 @@ export function renderOrderSummary() {
                         matchedItem.quantity = newValue
                         saveToStorage();
                         renderPaymentSummary();
+                        renderCheckoutHeader();
                     }
 
                 };
