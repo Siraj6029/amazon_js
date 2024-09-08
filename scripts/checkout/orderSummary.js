@@ -3,10 +3,8 @@ import { cart, removeFromCart, saveToStorage, updateDeliveryOption } from "../..
 import { deliveryOptions } from "../../data/deliveryOptions.js";
 import { products } from "../../data/products.js";
 import { formateCurrency } from ".././utils/money.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
-const today = dayjs();
-const deliveryDate = today.add(7, "days")
-const formatedDeliveryDate = deliveryDate.format("dddd, MMMM D")
 
 export function renderOrderSummary() {
 
@@ -104,6 +102,7 @@ export function renderOrderSummary() {
             removeFromCart(productId);
 
             document.querySelector(`.js-cart-item-container-${productId}`).remove()
+            renderPaymentSummary()
         })
     });
 
@@ -136,7 +135,8 @@ export function renderOrderSummary() {
 
                         const matchedItem = cart.find(obj => obj.productId === productId)
                         matchedItem.quantity = newValue
-                        saveToStorage()
+                        saveToStorage();
+                        renderPaymentSummary();
                     }
 
                 };
@@ -150,6 +150,7 @@ export function renderOrderSummary() {
             const { productId, deliveryOptionId } = deliveryOptionElem.dataset;
             updateDeliveryOption(productId, Number(deliveryOptionId));
             renderOrderSummary();
+            renderPaymentSummary();
         });
     });
 };
